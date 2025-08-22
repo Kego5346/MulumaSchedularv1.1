@@ -1,0 +1,34 @@
+<form method="POST">
+    {{ form.hidden_tag() }}
+    
+    <p>
+        {{ form.username.label }}<br>
+        {{ form.username(size=32) }}
+    </p>
+    
+    <p>
+        {{ form.password.label }}<br>
+        {{ form.password(size=32) }}
+    </p>
+
+    <!-- Occupation dropdown -->
+    <p>
+        {{ form.occupation.label }}<br>
+        {{ form.occupation() }}
+    </p>
+
+    <!-- Task field -->
+    <p>
+        {{ form.task.label }}<br>
+        {{ form.task(rows=3, cols=40) }}
+    </p>
+
+    <!-- Task date -->
+    <p>
+        {{ form.task_date.label }}<br>
+        {{ form.task_date() }}
+    </p>
+
+    <p>{{ form.submit() }}</p>
+</form>
+<p>Don't have an account? <a href="{{ url_for('register') }}">Register here</a>.</p>
