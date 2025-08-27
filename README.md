@@ -21,8 +21,8 @@ Muluma Scheduler is a simple web-based task management application that helps us
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/muluma-scheduler.git
-   cd muluma-scheduler
+   git clone https://github.com/Kego5346/MulumaSchedularv1.1.git
+  
 Create a virtual environment:
 
 bash
@@ -128,4 +128,5 @@ KegomoditsweB@muluma.co.za
 kegomoditswebadimo15@gmail.com
 
 You can call us on 0677723342
+
 
