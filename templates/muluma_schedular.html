@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Muluma Scheduler</title>
+<style>
+body { font-family: Arial, sans-serif; background-color: #f0f4f8; padding: 20px; color: #2c3e50; }
+.header { text-align: center; margin-bottom: 20px; position: relative; }
+.header img { width: 300px; height: auto; }
+h1 { color: #1a73e8; margin-bottom: 0; }
+#logout-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    padding: 8px 15px;
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    font-weight: bold;
+}
+#logout-btn:hover { background-color: #c0392b; }
+#live-clock { font-size: 20px; color: #1a73e8; margin-bottom: 20px; text-align: center; font-weight: bold; }
+table { width: 100%; border-collapse: collapse; background-color: #fff; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+th, td { padding: 10px; border: 1px solid #ccc; text-align: center; }
+th { background-color: #1a73e8; color: white; }
+tr:nth-child(even) { background-color: #f2f6fc; }
+input[type="text"], input[type="date"] { padding: 5px; margin: 5px; }
+.add-btn { padding: 5px 10px; background-color: #1a73e8; color: white; border: none; cursor: pointer; border-radius: 3px; }
+.add-btn:hover { background-color: #155ab6; }
+.delete-btn { padding: 5px 10px; background-color: #e74c3c; color: white; border: none; cursor: pointer; border-radius: 3px; }
+.delete-btn:hover { background-color: #c0392b; }
+.action-buttons a { padding: 5px 10px; background-color: #f39c12; color: white; text-decoration: none; border-radius: 3px; }
+.action-buttons a:hover { background-color: #d68910; }
+.input-row { margin-top: 20px; display: flex; flex-wrap: wrap; gap: 5px; justify-content: center; }
+</style>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+</head>
+<body>
+
+<div class="header">
+    <img src="{{ url_for('static', filename='muluma.png') }}" alt="Muluma Logo">
+    <h1>Muluma Scheduler</h1>
+    {% if current_user.is_authenticated %}
+        <a id="logout-btn" href="{{ url_for('logout') }}">Logout</a>
+    {% else %}
+        <a id="logout-btn" href="{{ url_for('login') }}">Login</a>
+    {% endif %}
+</div>
+
+<!-- Flash Messages -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, msg in messages %}
+      <div style="color: #333; margin-bottom:8px;">{{ msg }}</div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
+<!-- Live Clock -->
+<div id="live-clock"></div>
+
+<!-- Add New Task (Only logged in users) -->
+{% if current_user.is_authenticated %}
+<div class="input-row">
+    <form method="POST" action="{{ url_for('add_task') }}">
+        <input type="text" name="name" placeholder="Enter Name" required>
+        <input type="text" name="surname" placeholder="Enter Surname" required>
+        <input type="date" name="date" required>
+        <input type="text" name="backlog" placeholder="Backlog">
+        <input type="text" name="process" placeholder="Process">
+        <input type="text" name="done" placeholder="Done">
+        <button class="add-btn" type="submit">Add Task</button>
+    </form>
+</div>
+{% endif %}
+
+<!-- Task Table -->
+<table>
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Surname</th>
+            <th>Date</th>
+            <th>Backlog</th>
+            <th>Process</th>
+            <th>Done</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for task in tasks %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ task.name }}</td>
+            <td>{{ task.surname }}</td>
+            <td>{{ task.date }}</td>
+            <td>{{ task.backlog }}</td>
+            <td>{{ task.process }}</td>
+            <td>{{ task.done }}</td>
+            <td class="action-buttons">
+                {% if current_user.is_authenticated and (current_user.role == 'admin' or task.user_id == current_user.id) %}
+                    <form style="display:inline;" action="{{ url_for('delete_task', id=task.id) }}" method="POST">
+                        <button class="delete-btn" type="submit" onclick="return confirm('Are you sure you want to delete this task?');">Delete</button>
+                    </form>
+                    <a href="{{ url_for('edit_task', id=task.id) }}">Edit</a>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<script>
+// If the page is loaded from the back-forward cache, reload it
+window.addEventListener('pageshow', function(event) {
+    if (event.persisted) { // loaded from bfcache
+        window.location.reload();
+    }
+});
+
+// Extra check: if user somehow is not authenticated, redirect to login
+{% if not current_user.is_authenticated %}
+    window.location.href = "{{ url_for('login') }}";
+{% endif %}
+</script>
+
+<script>
+// Live Clock
+function updateClock() {
+    const now = new Date();
+    const hours = String(now.getHours()).padStart(2,'0');
+    const minutes = String(now.getMinutes()).padStart(2,'0');
+    const seconds = String(now.getSeconds()).padStart(2,'0');
+    document.getElementById('live-clock').textContent = `Current Time: ${hours}:${minutes}:${seconds}`;
+}
+updateClock();
+setInterval(updateClock, 1000);
+
+// Redirect to login if user is not authenticated (extra safety)
+{% if not current_user.is_authenticated %}
+    window.location.href = "{{ url_for('login') }}";
+{% endif %}
+</script>
+</body>
+</html>

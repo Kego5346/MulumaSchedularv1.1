@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Member Login</title>
+<title>Register</title>
 <style>
 body {
     font-family: Arial, sans-serif;
@@ -84,9 +84,18 @@ div.message {
 <body>
 <div class="box">
     <div class="header">
-        <img src="{{ url_for('static', filename='muluma.png') }}" alt="Muluma Logo">
+      <style>
+.logo {
+    width: 200px;   /* adjust width */
+    height: auto;   /* maintain aspect ratio */
+    max-width: 100%; /* responsive */
+}
+</style>
+
+        <img src="{{ url_for('static', filename='muluma.png') }}" alt="Muluma Logo" width="800" height="400">
+
     </div>
-    <h2>Member Login</h2>
+    <h2>Create Account</h2>
 
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
@@ -98,13 +107,14 @@ div.message {
 
     <form method="POST">
       <input name="name" placeholder="Name" required>
-      <input type="text" name="surname" placeholder="Surname" required>
-      <input name="password" type="password" placeholder="Password" required>
-      <button type="submit">Login</button>
+      <input name="surname" placeholder="Surname" required>
+      <input name="password" type="password" placeholder="Create Password" required>
+      <input name="confirm_password" type="password" placeholder="Confirm Password" required>
+      <button type="submit">Register</button>
     </form>
 
     <p style="font-size:0.9em;margin-top:15px">
-      <a href="{{ url_for('register') }}">Create account</a>
+      <a href="{{ url_for('login') }}">Back to Login</a>
     </p>
 </div>
 </body>

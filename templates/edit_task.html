@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Edit Task</title>
+<style>
+body { font-family: Arial, sans-serif; background-color: #f0f4f8; padding: 20px; color: #2c3e50; }
+h1 { color: #1a73e8; text-align: center; }
+form { max-width: 500px; margin: auto; background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+input[type="text"], input[type="date"] { width: 100%; padding: 10px; margin: 10px 0; border-radius: 5px; border: 1px solid #ccc; }
+button { padding: 10px 20px; background-color: #1a73e8; color: white; border: none; border-radius: 5px; cursor: pointer; }
+button:hover { background-color: #155ab6; }
+a { display: inline-block; margin-top: 10px; text-decoration: none; color: #1a73e8; }
+a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+<h1>Edit Task</h1>
+<form method="POST">
+    <h1>Backlog</h1>
+    <input type="text" name="backlog" placeholder="Backlog" value="{{ task.backlog }}">
+    <h1>Progress</h1>
+    <input type="text" name="process" placeholder="Process" value="{{ task.process }}">
+    <h1>Done</h1>
+    <input type="text" name="done" placeholder="Done" value="{{ task.done }}">
+    <button type="submit">Update Task</button>
+</form>
+<a href="{{ url_for('muluma_schedular') }}">Back to Scheduler</a>
+</body>
+</html>
